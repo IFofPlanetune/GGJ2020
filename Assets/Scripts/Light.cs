@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class Light : MonoBehaviour
 {
     private bool on;
-    public LightColors color;
+    public LightColors color_goal;
+    public LightColors current_color;
     public Sprite offSprite;
     public Sprite brokenSprite;
     public Sprite emptySprite;
@@ -98,7 +99,7 @@ public class Light : MonoBehaviour
     //Add new color values here
     Color getColorFromType()
     {
-        switch(color)
+        switch(current_color)
         {
             case LightColors.yellow:
                 return new Color(255,255,0,1);
@@ -187,5 +188,17 @@ public class Light : MonoBehaviour
             source.clip = wrong;
             source.Play();
         }
+    }
+
+    public bool isCorrect()
+    {
+        if (status == LightStatus.working && current_color == color_goal)
+        {
+            bool bolts = true;
+            foreach (Bolt bolt in bolt_list)
+                bolts = bolts && bolt.hasBolt;
+            return bolts;
+        }
+        return false;
     }
 }

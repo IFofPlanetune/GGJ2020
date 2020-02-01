@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 public class GlobalController : MonoBehaviour
 {
     // Start is called before the first frame update
+    private bool level_loaded = false;
+    public int level_count = 0;
     public bool current = false;
     public float clock_timer = 0.1f;
     private float timer = 0f;
@@ -20,11 +22,11 @@ public class GlobalController : MonoBehaviour
 
     AudioSource source;
     public AudioClip damage;
-    public AudioClip impulse;
+    public AudioClip win;
     AudioSource impulseS;
 
 
-    public string level_file = "Assets/Levels/Test.txt";
+    private string level_file = "Assets/Levels/";
 
     public Timer t;
 
@@ -34,9 +36,10 @@ public class GlobalController : MonoBehaviour
     public List<Bolt> bolt_list;
 
     //debug things
+    public Transform anchor;
 
     void Start()
-    {
+    { 
         source = this.GetComponents<AudioSource>()[0];
         impulseS = this.GetComponents<AudioSource>()[1];
         light_list = new List<Light>();
@@ -47,37 +50,54 @@ public class GlobalController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!level_loaded)
+            return;
         if (reset)
             return;
         timer += Time.deltaTime;
-        if(timer >= clock_timer)
+
+        if (current)
+        {
+            bool victory = true;
+            int i = 1;
+            foreach (Light l in light_list)
+            {
+                print("Lampe " + i++ + ": " + l.isCorrect());
+                victory = victory && l.isCorrect();
+            }
+
+            if (victory)
+            {
+                print("Victory!");
+                LevelCompleted();
+            }
+
+            foreach (Light l in light_list)
+                if (!l.SetLight(true))
+                {
+                    reset = true;
+                    TakeDamage();
+                    ResetLevel();
+                    return;
+                }
+        }
+
+
+        if (timer >= clock_timer)
         {
             current = !current;
             timer = Mathf.Max(0f, timer - clock_timer);
 
-            if(current)
-            {
-                impulseS.Play();
-                foreach(Light l in light_list)
-                    if(!l.SetLight(true))
-                    {
-                        reset = true;
-                        TakeDamage();
-                        ResetLevel();
-                        return;
-                    }
-            }
-            else
+            
+            if(!current)
             {
                 impulseS.Stop();
                 foreach (Light l in light_list)
-                    if(!l.SetLight(false))
-                    {
-                        reset = true;
-                        TakeDamage();
-                        ResetLevel();
-                        return;
-                    }
+                    l.SetLight(false);
+            }
+            else
+            {
+                impulseS.Play();
             }
         }
     }
@@ -110,10 +130,24 @@ public class GlobalController : MonoBehaviour
 
     public void GameOver()
     {
+        level_loaded = false;
         impulseS.Stop();
         foreach(Light light in light_list)
             light.GetComponent<BoxCollider2D>().enabled = false;
         SceneManager.LoadScene("GameOver",LoadSceneMode.Additive); 
+    }
+
+    void LevelCompleted()
+    {
+        t.time_remaining = 0;
+        impulseS.Stop();
+        LoadNextLevel();
+    }
+
+    void LoadNextLevel()
+    {
+        level_loaded = false;
+        SceneManager.LoadScene("LevelWin",LoadSceneMode.Additive);
     }
 
     public void ResetLevel()
@@ -131,9 +165,10 @@ public class GlobalController : MonoBehaviour
         LoadLevel();
         reset = false;
     }
-    public void LoadLevel()
+    void LoadLevel()
     {
-        StreamReader sr = new StreamReader(level_file);
+        print(level_count);
+        StreamReader sr = new StreamReader(level_file+level_count+".txt");
         string line;
         while ((line = sr.ReadLine()) != null)
         {
@@ -149,12 +184,13 @@ public class GlobalController : MonoBehaviour
                     t.time_remaining = int.Parse(line.Split(new char[]{ ';', '\n'})[1]);
                     break;
                 case "impulse":
-                    clock_timer = int.Parse(line.Split(new char[] { ';', '\n' })[1]);
+                    clock_timer = float.Parse(line.Split(new char[] { ';', '\n' })[1]);
                     break;
                 default:
                     break;
             }
         }
+        level_loaded = true;
     }
 
     void LoadLamp(string line)
@@ -165,7 +201,7 @@ public class GlobalController : MonoBehaviour
         {
             switch (i) {
                 case 1:
-                    light.transform.position = new Vector3(float.Parse(param[i]), float.Parse(param[i + 1]));
+                    light.transform.position = new Vector3(anchor.position.x+float.Parse(param[i]), anchor.position.y+float.Parse(param[i + 1]));
                     i++;
                     continue;
 
@@ -189,10 +225,12 @@ public class GlobalController : MonoBehaviour
                     switch (param[i])
                     {
                         case "y":
-                            light.color = Light.LightColors.yellow;
+                            light.color_goal = Light.LightColors.yellow;
+                            light.current_color = Light.LightColors.yellow;
                             break;
                         case "r":
-                            light.color = Light.LightColors.red;
+                            light.color_goal = Light.LightColors.red;
+                            light.current_color = Light.LightColors.red;
                             break;
                         default:
                             break;
@@ -216,7 +254,7 @@ public class GlobalController : MonoBehaviour
             switch (i)
             {
                 case 1:
-                    bolt.transform.position = new Vector3(float.Parse(param[i]), float.Parse(param[i + 1]));
+                    bolt.transform.position = new Vector3(anchor.position.x+float.Parse(param[i]), anchor.position.y+float.Parse(param[i + 1]));
                     i++;
                     continue;
 

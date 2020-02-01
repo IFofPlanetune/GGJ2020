@@ -1399,7 +1399,7 @@ MonoBehaviour:
   selected_tool: 0
   red_flash: {fileID: 51578191}
   damage: {fileID: 8300000, guid: a42a0dfdd6b40f14faaabc2b6e0187a5, type: 3}
-  impulse: {fileID: 0}
+  win: {fileID: 8300000, guid: 72581e126f4c21d489072b09596c7ec3, type: 3}
   level_file: Assets/Levels/Test.txt
   t: {fileID: 1768324066}
   lamp_prefab: {fileID: 2018192871142092982, guid: 3fa92c64090362740b6ca3f1761c48aa,
@@ -1408,6 +1408,7 @@ MonoBehaviour:
     type: 3}
   light_list: []
   bolt_list: []
+  anchor: {fileID: 219797664}
 --- !u!4 &1082369835
 Transform:
   m_ObjectHideFlags: 0
