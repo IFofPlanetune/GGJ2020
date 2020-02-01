@@ -13,6 +13,10 @@ public class Light : MonoBehaviour
     public LightStatus status;
     public GlobalController controller;
 
+    private AudioSource source;
+    public AudioClip screw;
+    public AudioClip wrong;
+
     public List<Bolt> bolt_list = new List<Bolt>();
 
     public enum LightStatus
@@ -28,6 +32,7 @@ public class Light : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        source = this.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -134,9 +139,22 @@ public class Light : MonoBehaviour
         foreach(Bolt bolt in bolt_list)
             bolt_check = bolt_check || bolt.hasBolt;
         if (bolt_check)
+        {
+            source.clip = wrong;
+            source.Play();
             return;
-        if(controller.selected_tool == Tool.ToolType.hand)
+        }
+        if (controller.selected_tool == Tool.ToolType.hand)
+        {
+            source.clip = screw;
+            source.Play();
             SwitchStatus(LightStatus.none);
+        }
+        else
+        {
+            source.clip = wrong;
+            source.Play();
+        }
     }
 
     void clickWorking()
@@ -153,7 +171,21 @@ public class Light : MonoBehaviour
         foreach (Bolt bolt in bolt_list)
             bolt_check = bolt_check || bolt.hasBolt;
         if (bolt_check)
+        {
+            source.clip = wrong;
+            source.Play();
             return;
-        SwitchStatus(LightStatus.working);
+        }
+        if (controller.selected_tool == Tool.ToolType.hand)
+        {
+            source.clip = screw;
+            source.Play();
+            SwitchStatus(LightStatus.working);
+        }
+        else
+        {
+            source.clip = wrong;
+            source.Play();
+        }
     }
 }

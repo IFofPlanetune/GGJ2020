@@ -18,7 +18,15 @@ public class GlobalController : MonoBehaviour
 
     public Image red_flash;
 
+    AudioSource source;
+    public AudioClip damage;
+    public AudioClip impulse;
+    AudioSource impulseS;
+
+
     public string level_file = "Assets/Levels/Test.txt";
+
+    public Timer t;
 
     public GameObject lamp_prefab;
     public GameObject bolt_prefab;
@@ -29,6 +37,8 @@ public class GlobalController : MonoBehaviour
 
     void Start()
     {
+        source = this.GetComponents<AudioSource>()[0];
+        impulseS = this.GetComponents<AudioSource>()[1];
         light_list = new List<Light>();
         bolt_list = new List<Bolt>();
         LoadLevel();
@@ -47,6 +57,7 @@ public class GlobalController : MonoBehaviour
 
             if(current)
             {
+                impulseS.Play();
                 foreach(Light l in light_list)
                     if(!l.SetLight(true))
                     {
@@ -58,6 +69,7 @@ public class GlobalController : MonoBehaviour
             }
             else
             {
+                impulseS.Stop();
                 foreach (Light l in light_list)
                     if(!l.SetLight(false))
                     {
@@ -78,6 +90,8 @@ public class GlobalController : MonoBehaviour
     public void TakeDamage()
     {
         health--;
+        source.clip = damage;
+        source.Play();
         if(health <= 0)
         {
             GameOver();
@@ -96,6 +110,7 @@ public class GlobalController : MonoBehaviour
 
     public void GameOver()
     {
+        impulseS.Stop();
         foreach(Light light in light_list)
             light.GetComponent<BoxCollider2D>().enabled = false;
         SceneManager.LoadScene("GameOver",LoadSceneMode.Additive); 
@@ -129,6 +144,12 @@ public class GlobalController : MonoBehaviour
                     break;
                 case "bolt":
                     LoadBolt(line);
+                    break;
+                case "timer":
+                    t.time_remaining = int.Parse(line.Split(new char[]{ ';', '\n'})[1]);
+                    break;
+                case "impulse":
+                    clock_timer = int.Parse(line.Split(new char[] { ';', '\n' })[1]);
                     break;
                 default:
                     break;

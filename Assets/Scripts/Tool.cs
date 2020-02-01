@@ -13,10 +13,11 @@ public class Tool : MonoBehaviour
     public ToolType type;
     public GameObject highlight;
 
+
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
     // Update is called once per frame
@@ -27,6 +28,7 @@ public class Tool : MonoBehaviour
 
     private void OnMouseDown()
     {
+        this.GetComponent<AudioSource>().Play();
         controller.selected_tool = type;
         highlight.transform.position = this.transform.position;
         highlight.SetActive(true);
