@@ -21,13 +21,16 @@ public class GlobalController : MonoBehaviour
     public string level_file = "Assets/Levels/Test.txt";
 
     public GameObject lamp_prefab;
+    public GameObject bolt_prefab;
     public List<Light> light_list;
+    public List<Bolt> bolt_list;
 
     //debug things
 
     void Start()
     {
         light_list = new List<Light>();
+        bolt_list = new List<Bolt>();
         LoadLevel();
     }
 
@@ -47,7 +50,6 @@ public class GlobalController : MonoBehaviour
                 foreach(Light l in light_list)
                     if(!l.SetLight(true))
                     {
-                        print(timer);
                         reset = true;
                         TakeDamage();
                         ResetLevel();
@@ -59,7 +61,6 @@ public class GlobalController : MonoBehaviour
                 foreach (Light l in light_list)
                     if(!l.SetLight(false))
                     {
-                        print(timer);
                         reset = true;
                         TakeDamage();
                         ResetLevel();
@@ -102,12 +103,16 @@ public class GlobalController : MonoBehaviour
 
     public void ResetLevel()
     {
-        print("Lamps destroyed");
         foreach(Light l in light_list)
         {
             Destroy(l.gameObject);
         }
+        foreach (Bolt b in bolt_list)
+        {
+            Destroy(b.gameObject);
+        }
         light_list = new List<Light>();
+        bolt_list = new List<Bolt>();
         LoadLevel();
         reset = false;
     }
@@ -122,43 +127,96 @@ public class GlobalController : MonoBehaviour
                 case "lamp":
                     LoadLamp(line);
                     break;
+                case "bolt":
+                    LoadBolt(line);
+                    break;
                 default:
                     break;
             }
         }
     }
 
-    public void LoadLamp(string line)
+    void LoadLamp(string line)
     {
         string[] param = line.Split(';');
         Light light = Instantiate(lamp_prefab).GetComponent<Light>();
-        for(int i = 1; i < param.Length; i++)
+        for (int i = 1; i < param.Length; i++)
         {
-            if(i == 1)
-            {
-                light.transform.position = new Vector3(float.Parse(param[i]),float.Parse(param[i+1]));
-                i++;
-                continue;
-            }
-            if(i == 3)
-            {
-                switch(param[i])
-                {
-                    case "w":
-                        light.SwitchStatus(Light.LightStatus.working);
-                        break;
-                    case "b":
-                        light.SwitchStatus(Light.LightStatus.broken);
-                        break;
-                    case "n":
-                        light.SwitchStatus(Light.LightStatus.none);
-                        break;
-                    default:
-                        break;
-                }
+            switch (i) {
+                case 1:
+                    light.transform.position = new Vector3(float.Parse(param[i]), float.Parse(param[i + 1]));
+                    i++;
+                    continue;
+
+                case 3:
+                    switch (param[i])
+                    {
+                        case "w":
+                            light.SwitchStatus(Light.LightStatus.working);
+                            break;
+                        case "b":
+                            light.SwitchStatus(Light.LightStatus.broken);
+                            break;
+                        case "n":
+                            light.SwitchStatus(Light.LightStatus.none);
+                            break;
+                        default:
+                            break;
+                    }
+                    continue;
+                case 4:
+                    switch (param[i])
+                    {
+                        case "y":
+                            light.color = Light.LightColors.yellow;
+                            break;
+                        case "r":
+                            light.color = Light.LightColors.red;
+                            break;
+                        default:
+                            break;
+                    }
+                    continue;
+                default:
+                    light.bolt_list.Add(bolt_list[int.Parse(param[i].Split('\n')[0]) - 1]);
+                    continue;
             }
         }
         light.controller = this;
         light_list.Add(light);
+    }
+
+    void LoadBolt(string line)
+    {
+        string[] param = line.Split(';');
+        Bolt bolt = Instantiate(bolt_prefab).GetComponent<Bolt>();
+        for(int i = 1; i < param.Length; i++)
+        {
+            switch (i)
+            {
+                case 1:
+                    bolt.transform.position = new Vector3(float.Parse(param[i]), float.Parse(param[i + 1]));
+                    i++;
+                    continue;
+
+                case 3:
+                    switch (param[i])
+                    {
+                        case "p":
+                            bolt.type = Bolt.BoltType.plus;
+                            break;
+                        case "m":
+                            bolt.type = Bolt.BoltType.minus;
+                            break;
+                        default:
+                            break;
+                    }
+                    continue;
+                default:
+                    continue;
+            }
+        }
+        bolt.controller = this;
+        bolt_list.Add(bolt);
     }
 }
