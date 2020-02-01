@@ -1,6 +1,8 @@
 Dokumentation Leveldatei:
 
 gesamtAufbau:
+[timer]
+[impulse]
 [Schraube 1]
 [Schraube 2]
 [...]
@@ -10,6 +12,16 @@ gesamtAufbau:
 [....]
 [Lampe x]
 [Leerzeile! wichtig]
+
+Timeraufbau:
+timer;[time]
+
+time - Zeit in sekunden
+
+impulseaufbau:
+impulse;[time]
+
+time - Impulszeit in Sekunden
 
 Schraubenaufbau:
 bolt;[x];[y];[typ]

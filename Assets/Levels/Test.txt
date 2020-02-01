@@ -1,3 +1,5 @@
+timer;125
+impulse;3
 bolt;2;1;p
 bolt;-1;0;m
 lamp;1;1;w;r;1
