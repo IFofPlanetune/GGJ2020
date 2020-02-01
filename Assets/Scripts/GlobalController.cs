@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -11,20 +13,29 @@ public class GlobalController : MonoBehaviour
     public float clock_timer = 0.1f;
     private float timer = 0f;
     public int health = 3;
+    public bool reset = false;
+    public Tool.ToolType selected_tool;
 
     public Image red_flash;
 
+    public string level_file = "Assets/Levels/Test.txt";
+
+    public GameObject lamp_prefab;
+    public List<Light> light_list;
+
     //debug things
-    public Light test_light;
 
     void Start()
     {
-       
+        light_list = new List<Light>();
+        LoadLevel();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (reset)
+            return;
         timer += Time.deltaTime;
         if(timer >= clock_timer)
         {
@@ -33,13 +44,34 @@ public class GlobalController : MonoBehaviour
 
             if(current)
             {
-                test_light.SetLight(true);
+                foreach(Light l in light_list)
+                    if(!l.SetLight(true))
+                    {
+                        print(timer);
+                        reset = true;
+                        TakeDamage();
+                        ResetLevel();
+                        return;
+                    }
             }
             else
             {
-                test_light.SetLight(false);
+                foreach (Light l in light_list)
+                    if(!l.SetLight(false))
+                    {
+                        print(timer);
+                        reset = true;
+                        TakeDamage();
+                        ResetLevel();
+                        return;
+                    }
             }
         }
+    }
+
+    public void setTool(Tool.ToolType t)
+    {
+        selected_tool = t;
     }
 
     public void TakeDamage()
@@ -63,7 +95,70 @@ public class GlobalController : MonoBehaviour
 
     public void GameOver()
     {
-        test_light.GetComponent<BoxCollider2D>().enabled = false;
+        foreach(Light light in light_list)
+            light.GetComponent<BoxCollider2D>().enabled = false;
         SceneManager.LoadScene("GameOver",LoadSceneMode.Additive); 
+    }
+
+    public void ResetLevel()
+    {
+        print("Lamps destroyed");
+        foreach(Light l in light_list)
+        {
+            Destroy(l.gameObject);
+        }
+        light_list = new List<Light>();
+        LoadLevel();
+        reset = false;
+    }
+    public void LoadLevel()
+    {
+        StreamReader sr = new StreamReader(level_file);
+        string line;
+        while ((line = sr.ReadLine()) != null)
+        {
+            switch (line.Split(';')[0])
+            {
+                case "lamp":
+                    LoadLamp(line);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void LoadLamp(string line)
+    {
+        string[] param = line.Split(';');
+        Light light = Instantiate(lamp_prefab).GetComponent<Light>();
+        for(int i = 1; i < param.Length; i++)
+        {
+            if(i == 1)
+            {
+                light.transform.position = new Vector3(float.Parse(param[i]),float.Parse(param[i+1]));
+                i++;
+                continue;
+            }
+            if(i == 3)
+            {
+                switch(param[i])
+                {
+                    case "w":
+                        light.SwitchStatus(Light.LightStatus.working);
+                        break;
+                    case "b":
+                        light.SwitchStatus(Light.LightStatus.broken);
+                        break;
+                    case "n":
+                        light.SwitchStatus(Light.LightStatus.none);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        light.controller = this;
+        light_list.Add(light);
     }
 }

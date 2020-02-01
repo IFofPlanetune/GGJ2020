@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2018192871142092969}
   - component: {fileID: 2018192871142092970}
   m_Layer: 0
-  m_Name: TestLight
+  m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2018192871142092982}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -71,12 +71,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b09881878ff29c741a79b6740ce828c0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 27c9d2dec1a163d4aa103551fa1bd67d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.2, y: 4.6}
+  m_Size: {x: 4.2, y: 5.42}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -94,8 +94,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1647eef3cd08f22498fc039744fb918a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onSprite: {fileID: 21300000, guid: 3d676b83a9b1ee949b7f53bc8640d023, type: 3}
-  offSprite: {fileID: 21300000, guid: b09881878ff29c741a79b6740ce828c0, type: 3}
+  on_color: {r: 1, g: 0.98565185, b: 0, a: 1}
+  offSprite: {fileID: 21300000, guid: 27c9d2dec1a163d4aa103551fa1bd67d, type: 3}
+  brokenSprite: {fileID: 21300000, guid: be79fbb1048d9bf46a4d7c4d2c9c372d, type: 3}
+  emptySprite: {fileID: 21300000, guid: f65824e977e07974b9f2943769ddd16f, type: 3}
+  status: 0
   controller: {fileID: 0}
 --- !u!61 &2018192871142092970
 BoxCollider2D:
@@ -114,8 +117,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.2, y: 4.6}
-    newSize: {x: 4.2, y: 4.6}
+    oldSize: {x: 4.2, y: 5.42}
+    newSize: {x: 4.2, y: 5.42}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
