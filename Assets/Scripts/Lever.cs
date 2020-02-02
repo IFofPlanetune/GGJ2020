@@ -5,6 +5,7 @@ using UnityEngine;
 public class Lever : MonoBehaviour
 {
     // Start is called before the first frame update
+    public GlobalController controller;
     public bool on;
     public Sprite on_sprite;
     public Sprite off_sprite;
@@ -21,10 +22,13 @@ public class Lever : MonoBehaviour
 
     private void OnMouseDown()
     {
-        on = !on;
-        if (on)
-            GetComponent<SpriteRenderer>().sprite = on_sprite;
-        else
-            GetComponent<SpriteRenderer>().sprite = off_sprite;
+        if (controller.selected_tool == Tool.ToolType.hand)
+        {
+            on = !on;
+            if (on)
+                GetComponent<SpriteRenderer>().sprite = on_sprite;
+            else
+                GetComponent<SpriteRenderer>().sprite = off_sprite;
+        }
     }
 }

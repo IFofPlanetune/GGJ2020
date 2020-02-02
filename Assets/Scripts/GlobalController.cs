@@ -410,6 +410,7 @@ public class GlobalController : MonoBehaviour
                     continue;
             }
         }
+        lever.controller = this;
         lever_list.Add(lever);
     }
 
