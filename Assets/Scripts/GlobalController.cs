@@ -66,6 +66,8 @@ public class GlobalController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheatCodeChecker();
+
         if (!level_loaded)
             return;
         if (reset)
@@ -193,6 +195,10 @@ public class GlobalController : MonoBehaviour
         impulseS.Stop();
         foreach(Light light in light_list)
             light.GetComponent<BoxCollider2D>().enabled = false;
+        foreach (Bolt bolt in bolt_list)
+            bolt.GetComponent<BoxCollider2D>().enabled = false;
+        foreach (Lever lever in lever_list)
+            lever.GetComponent<BoxCollider2D>().enabled = false;
         SceneManager.LoadScene("GameOver",LoadSceneMode.Additive); 
     }
 
@@ -397,5 +403,73 @@ public class GlobalController : MonoBehaviour
             }
         }
         lever_list.Add(lever);
+    }
+
+    void CheatCodeChecker()
+    {
+        int level_no = 0;
+        bool level_change = false;
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            level_change = true;
+            level_no = 10;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            print("1 pressed");
+            level_change = true;
+            level_no = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            level_change = true;
+            level_no = 2;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            level_change = true;
+            level_no = 3;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            level_change = true;
+            level_no = 4;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            level_change = true;
+            level_no = 5;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            level_change = true;
+            level_no = 6;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            level_change = true;
+            level_no = 7;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            level_change = true;
+            level_no = 8;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            level_change = true;
+            level_no = 9;
+        }
+
+        if (level_change)
+        {
+            FileStream stream = File.Open("Assets/Levels/counter.txt", FileMode.Create);
+            StreamWriter sr = new StreamWriter(stream);
+            sr.WriteLine(level_no);
+            sr.WriteLine();
+            sr.Close();
+            SceneManager.LoadScene("Game");
+        }
+        return;
     }
 }

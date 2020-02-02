@@ -9,13 +9,11 @@ public class WinMenu : MonoBehaviour
 {
 
     // Start is called before the first frame update
-    public Text win_text;
     int levelcount;
     void Start()
     {
         StreamReader sr = new StreamReader("Assets/Levels/counter.txt");
         levelcount = int.Parse(sr.ReadLine().Split('\n')[0]);
-        win_text.text = "Level " + levelcount + ": Repaired!";
         sr.Close();
     }
 
