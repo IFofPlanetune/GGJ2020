@@ -24,6 +24,8 @@ public class GlobalController : MonoBehaviour
     public Image red_flash;
     bool dmg_done = true;
 
+    public Healthbar healthbar;
+
     AudioSource source;
     public AudioClip damage;
     public AudioClip win;
@@ -136,6 +138,7 @@ public class GlobalController : MonoBehaviour
             return;
         dmg_done = false;
         health--;
+        healthbar.SetHearts(health);
         source.clip = damage;
         source.Play();
         if(health <= 0)
