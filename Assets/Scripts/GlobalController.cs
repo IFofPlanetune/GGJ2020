@@ -118,17 +118,11 @@ public class GlobalController : MonoBehaviour
         screw_amount += i;
         if(selected_tool == Tool.ToolType.minus)
         {
-            if (i > 0)
-                minus_tool.IncreaseScrews();
-            else
-                minus_tool.DecreaseScrews();
+            minus_tool.ChangeScrews(screw_amount);
         }
         else
         {
-            if (i > 0)
-                plus_tool.IncreaseScrews();
-            else
-                plus_tool.DecreaseScrews();
+            plus_tool.ChangeScrews(screw_amount);
         }
     }
 
@@ -137,6 +131,9 @@ public class GlobalController : MonoBehaviour
         if (!dmg_done)
             return;
         dmg_done = false;
+        screw_amount = 0;
+        plus_tool.ChangeScrews(screw_amount);
+        minus_tool.ChangeScrews(screw_amount);
         health--;
         healthbar.SetHearts(health);
         source.clip = damage;

@@ -63,15 +63,9 @@ public class Tool : MonoBehaviour
         light.color = Light.getColorFromType(color);
     }
 
-    public void IncreaseScrews()
+    public void ChangeScrews(int i)
     {
-        no_of_screws++;
-        screw_text.text = "" + no_of_screws;
-    }
-
-    public void DecreaseScrews()
-    {
-        no_of_screws--;
+        no_of_screws = i;
         screw_text.text = "" + no_of_screws;
     }
 
