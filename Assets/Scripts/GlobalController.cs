@@ -15,7 +15,8 @@ public class GlobalController : MonoBehaviour
     private float timer = 0f;
     public int health = 3;
     public bool reset = false;
-    public Tool.ToolType selected_tool;
+    public Tool.ToolType selected_tool = Tool.ToolType.hand;
+    public Light.LightColors tool_color = Light.LightColors.yellow;
 
     public Image red_flash;
 

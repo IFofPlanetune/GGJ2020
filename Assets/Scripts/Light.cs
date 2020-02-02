@@ -58,7 +58,9 @@ public class Light : MonoBehaviour
         {
             if (b)
             {
-                this.GetComponent<SpriteRenderer>().color = getColorFromType();
+                this.GetComponent<SpriteRenderer>().color = getColorFromType(current_color);
+                if (current_color != color_goal)
+                    return false;
             }
             else
             {
@@ -97,9 +99,9 @@ public class Light : MonoBehaviour
     }
 
     //Add new color values here
-    Color getColorFromType()
+    public static Color getColorFromType(LightColors type)
     {
-        switch(current_color)
+        switch(type)
         {
             case LightColors.yellow:
                 return new Color(255,255,0,1);
@@ -177,10 +179,11 @@ public class Light : MonoBehaviour
             source.Play();
             return;
         }
-        if (controller.selected_tool == Tool.ToolType.hand)
+        if (controller.selected_tool == Tool.ToolType.lamp)
         {
             source.clip = screw;
             source.Play();
+            current_color = controller.tool_color;
             SwitchStatus(LightStatus.working);
         }
         else
