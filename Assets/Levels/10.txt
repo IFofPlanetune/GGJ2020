@@ -1,0 +1,10 @@
+timer;122
+impulse;11
+bolt;-1;1;p
+bolt;0;1;m
+bolt;1;1;p
+bolt;-1;-1;m
+bolt;0;-1;p
+bolt;1;-1;m
+lamp;-5;0;w;r
+lamp;0;0;b;r;1;2;3;4;5;6

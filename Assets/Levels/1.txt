@@ -1,4 +1,4 @@
 timer;125
 impulse;4
 lamp;-2;0;w;r
-lamp;2;0;b;y
+lamp;2;0;b;r

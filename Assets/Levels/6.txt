@@ -1,13 +1,13 @@
 timer;122
 impulse;5
 bolt;-3;-1;p
-bolt;-1,5;-1;p
-bolt;-0,5;-1;m
+bolt;-1.5;-1;p
+bolt;-0.5;-1;m
 bolt;1;1;p
 bolt;1;-1;p
 bolt;3;1;p
-bolt;2,5;-1;m
-bolt;3,5;-1;m
+bolt;2.5;-1;m
+bolt;3.5;-1;m
 lamp;-3;0;w;r;1
 lamp;-1;0;b;r;2;3
 lamp;1;0;b;r;4;5
