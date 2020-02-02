@@ -193,6 +193,7 @@ public class GlobalController : MonoBehaviour
         t.time_remaining = 0;
         level_loaded = false;
         impulseS.Stop();
+        tick.Stop();
         foreach(Light light in light_list)
             light.GetComponent<BoxCollider2D>().enabled = false;
         foreach (Bolt bolt in bolt_list)
@@ -207,6 +208,7 @@ public class GlobalController : MonoBehaviour
         t.time_remaining = 0;
         level_loaded = false;
         impulseS.Stop();
+        tick.Stop();
         LoadNextLevel();
     }
 
