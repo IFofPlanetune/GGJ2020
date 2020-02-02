@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 
 public class GlobalController : MonoBehaviour
 {
-    // Start is called before the first frame update
     private bool level_loaded = false;
     public int level_count = 0;
     public bool current = false;
@@ -38,8 +37,11 @@ public class GlobalController : MonoBehaviour
     //debug things
     public Transform anchor;
 
+    // Start is called before the first frame update
     void Start()
     {
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
         StreamReader sr = new StreamReader("Assets/Levels/counter.txt");
         level_count = int.Parse(sr.ReadLine().Split('\n')[0]);
         sr.Close();
@@ -65,7 +67,6 @@ public class GlobalController : MonoBehaviour
             int i = 1;
             foreach (Light l in light_list)
             {
-                print("Lampe " + i++ + ": " + l.isCorrect());
                 victory = victory && l.isCorrect();
             }
 
@@ -204,6 +205,7 @@ public class GlobalController : MonoBehaviour
         {
             switch (i) {
                 case 1:
+                    print(float.Parse(param[i]));
                     light.transform.position = new Vector3(anchor.position.x+float.Parse(param[i]), anchor.position.y+float.Parse(param[i + 1]));
                     i++;
                     continue;
