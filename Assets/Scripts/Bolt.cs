@@ -72,6 +72,7 @@ public class Bolt : MonoBehaviour
             source.clip = screw;
             source.Play();
             hasBolt = false;
+            controller.ChangeScrews(1);
         }
         else
         {
@@ -82,13 +83,22 @@ public class Bolt : MonoBehaviour
 
     void AddBolt()
     {
-        if ((type == BoltType.minus && controller.selected_tool == Tool.ToolType.minus) ||
-           (type == BoltType.plus && controller.selected_tool == Tool.ToolType.plus))
+        if (controller.screw_amount > 0)
         {
-            source.clip = screw;
-            source.Play();
-            hasBolt = false;
-            hasBolt = true;
+            if ((type == BoltType.minus && controller.selected_tool == Tool.ToolType.minus) ||
+               (type == BoltType.plus && controller.selected_tool == Tool.ToolType.plus))
+            {
+                source.clip = screw;
+                source.Play();
+                hasBolt = false;
+                hasBolt = true;
+                controller.ChangeScrews(-1);
+            }
+            else
+            {
+                source.clip = wrong;
+                source.Play();
+            }
         }
         else
         {

@@ -17,8 +17,12 @@ public class GlobalController : MonoBehaviour
     public bool reset = false;
     public Tool.ToolType selected_tool = Tool.ToolType.hand;
     public Light.LightColors tool_color = Light.LightColors.yellow;
+    public Tool plus_tool;
+    public Tool minus_tool;
+    public int screw_amount = 0;
 
     public Image red_flash;
+    bool dmg_done = true;
 
     AudioSource source;
     public AudioClip damage;
@@ -107,13 +111,30 @@ public class GlobalController : MonoBehaviour
         }
     }
 
-    public void setTool(Tool.ToolType t)
+    public void ChangeScrews(int i)
     {
-        selected_tool = t;
+        screw_amount += i;
+        if(selected_tool == Tool.ToolType.minus)
+        {
+            if (i > 0)
+                minus_tool.IncreaseScrews();
+            else
+                minus_tool.DecreaseScrews();
+        }
+        else
+        {
+            if (i > 0)
+                plus_tool.IncreaseScrews();
+            else
+                plus_tool.DecreaseScrews();
+        }
     }
 
     public void TakeDamage()
     {
+        if (!dmg_done)
+            return;
+        dmg_done = false;
         health--;
         source.clip = damage;
         source.Play();
@@ -123,6 +144,13 @@ public class GlobalController : MonoBehaviour
             return;
         }
         StartCoroutine(FlashRed());
+        StartCoroutine(DmgCD());
+    }
+
+    IEnumerator DmgCD()
+    {
+        yield return new WaitForSeconds(0.2f);
+        dmg_done = true;
     }
 
     IEnumerator FlashRed()
@@ -135,6 +163,7 @@ public class GlobalController : MonoBehaviour
 
     public void GameOver()
     {
+        t.time_remaining = 0;
         level_loaded = false;
         impulseS.Stop();
         foreach(Light light in light_list)
@@ -145,6 +174,7 @@ public class GlobalController : MonoBehaviour
     void LevelCompleted()
     {
         t.time_remaining = 0;
+        level_loaded = false;
         impulseS.Stop();
         LoadNextLevel();
     }
