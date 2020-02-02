@@ -3,6 +3,9 @@ Dokumentation Leveldatei:
 gesamtAufbau:
 [timer]
 [impulse]
+[Hebel 1]
+[...]
+[Hebel x]
 [Schraube 1]
 [Schraube 2]
 [...]
@@ -22,6 +25,12 @@ impulseaufbau:
 impulse;[time]
 
 time - Impulszeit in Sekunden
+
+hebelaufbau:
+lever;[x];[y];[on];[orientation]
+
+on - t = true; f = false
+orientation - v = vertical, h = horizontal
 
 Schraubenaufbau:
 bolt;[x];[y];[typ]

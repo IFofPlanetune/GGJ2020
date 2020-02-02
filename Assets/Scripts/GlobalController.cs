@@ -30,6 +30,8 @@ public class GlobalController : MonoBehaviour
     public AudioClip damage;
     public AudioClip win;
     AudioSource impulseS;
+    public AudioSource tick;
+    public AudioSource music;
 
 
     private string level_file = "Assets/Levels/";
@@ -38,8 +40,10 @@ public class GlobalController : MonoBehaviour
 
     public GameObject lamp_prefab;
     public GameObject bolt_prefab;
+    public GameObject lever_prefab;
     public List<Light> light_list;
     public List<Bolt> bolt_list;
+    public List<Lever> lever_list;
 
     //debug things
     public Transform anchor;
@@ -66,7 +70,47 @@ public class GlobalController : MonoBehaviour
             return;
         if (reset)
             return;
+
         timer += Time.deltaTime;
+
+
+        bool leverb = true;
+        foreach (Lever l in lever_list)
+        {
+            leverb = leverb && l.on;
+        }
+
+        if (!leverb)
+        {
+            if (current)
+            {
+                timer = 0;
+                current = !current;
+                impulseS.Stop();
+                foreach (Light l in light_list)
+                    l.SetLight(false);
+            }
+            return;
+        }
+
+        if (timer >= clock_timer)
+        {
+            current = !current;
+            timer = 0;
+
+            
+            if(!current)
+            {
+                impulseS.Stop();
+                foreach (Light l in light_list)
+                    l.SetLight(false);
+            }
+            else
+            {
+                impulseS.Play();
+            }
+        }
+
 
         if (current)
         {
@@ -91,25 +135,6 @@ public class GlobalController : MonoBehaviour
                     ResetLevel();
                     return;
                 }
-        }
-
-
-        if (timer >= clock_timer)
-        {
-            current = !current;
-            timer = Mathf.Max(0f, timer - clock_timer);
-
-            
-            if(!current)
-            {
-                impulseS.Stop();
-                foreach (Light l in light_list)
-                    l.SetLight(false);
-            }
-            else
-            {
-                impulseS.Play();
-            }
         }
     }
 
@@ -220,6 +245,11 @@ public class GlobalController : MonoBehaviour
                     break;
                 case "impulse":
                     clock_timer = float.Parse(line.Split(new char[] { ';', '\n' })[1]);
+                    tick.Play();
+                    //music.Play();
+                    break;
+                case "lever":
+                    LoadLever(line);
                     break;
                 default:
                     break;
@@ -313,5 +343,54 @@ public class GlobalController : MonoBehaviour
         }
         bolt.controller = this;
         bolt_list.Add(bolt);
+    }
+
+    void LoadLever(string line)
+    {
+        string[] param = line.Split(';');
+        Lever lever = Instantiate(lever_prefab).GetComponent<Lever>();
+        for (int i = 1; i < param.Length; i++)
+        {
+            switch (i)
+            {
+                case 1:
+                    lever.transform.position = new Vector3(anchor.position.x + float.Parse(param[i]), anchor.position.y + float.Parse(param[i + 1]));
+                    i++;
+                    continue;
+
+                case 3:
+                    switch (param[i])
+                    {
+                        case "t":
+                            lever.on = true;
+                            lever.GetComponent<SpriteRenderer>().sprite = lever.on_sprite;
+                            break;
+                        case "f":
+                            lever.on = false;
+                            lever.GetComponent<SpriteRenderer>().sprite = lever.off_sprite;
+                            break;
+                        default:
+                            break;
+                    }
+                    continue;
+
+                case 4:
+                    switch (param[i])
+                    {
+                        case "v":
+                            break;
+                        case "h":
+                            lever.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                            break;
+                        default:
+                            break;
+                    }
+                    continue;
+
+                default:
+                    continue;
+            }
+        }
+        lever_list.Add(lever);
     }
 }
