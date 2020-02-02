@@ -220,8 +220,13 @@ public class GlobalController : MonoBehaviour
         {
             Destroy(b.gameObject);
         }
+        foreach (Lever l in lever_list)
+        {
+            Destroy(l.gameObject);
+        }
         light_list = new List<Light>();
         bolt_list = new List<Bolt>();
+        lever_list = new List<Lever>();
         LoadLevel();
         reset = false;
     }
