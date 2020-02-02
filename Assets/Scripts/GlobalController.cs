@@ -159,8 +159,8 @@ public class GlobalController : MonoBehaviour
             return;
         dmg_done = false;
         screw_amount = 0;
-        plus_tool.ChangeScrews(screw_amount);
-        minus_tool.ChangeScrews(screw_amount);
+        plus_tool.ChangeScrews(0);
+        minus_tool.ChangeScrews(0);
         health--;
         healthbar.SetHearts(health);
         source.clip = damage;
