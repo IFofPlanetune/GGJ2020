@@ -1,0 +1,10 @@
+timer;122
+impulse;5
+lamp;-3;0;w;r
+lamp;-3;2;w;y
+lamp;-3;-2;w;y
+lamp;3;0;b;y
+lamp;3;2;w;r
+lamp;3;-2;w;r
+
+
