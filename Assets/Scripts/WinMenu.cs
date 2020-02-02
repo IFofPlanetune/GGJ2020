@@ -16,6 +16,7 @@ public class WinMenu : MonoBehaviour
         StreamReader sr = new StreamReader("Assets/Levels/counter.txt");
         levelcount = int.Parse(sr.ReadLine().Split('\n')[0]);
         win_text.text = "Level " + levelcount + ": Repaired!";
+        sr.Close();
     }
 
     // Update is called once per frame

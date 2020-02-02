@@ -39,7 +39,10 @@ public class GlobalController : MonoBehaviour
     public Transform anchor;
 
     void Start()
-    { 
+    {
+        StreamReader sr = new StreamReader("Assets/Levels/counter.txt");
+        level_count = int.Parse(sr.ReadLine().Split('\n')[0]);
+        sr.Close();
         source = this.GetComponents<AudioSource>()[0];
         impulseS = this.GetComponents<AudioSource>()[1];
         light_list = new List<Light>();
