@@ -215,6 +215,12 @@ public class GlobalController : MonoBehaviour
     void LoadNextLevel()
     {
         level_loaded = false;
+        foreach (Light light in light_list)
+            light.GetComponent<BoxCollider2D>().enabled = false;
+        foreach (Bolt bolt in bolt_list)
+            bolt.GetComponent<BoxCollider2D>().enabled = false;
+        foreach (Lever lever in lever_list)
+            lever.GetComponent<BoxCollider2D>().enabled = false;
         SceneManager.LoadScene("LevelWin",LoadSceneMode.Additive);
     }
 
